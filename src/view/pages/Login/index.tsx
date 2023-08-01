@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
+import { useLoginController } from "./useLoginController";
 
 export function Login(){
+  const { formHandleSubmit, register } = useLoginController()
   return (
     <>
       <header className="flex flex-col items-center gap-4 text-center " >
@@ -13,9 +15,9 @@ export function Login(){
         </p> 
       </header>
 
-      <form action="" className="mt-[60px] flex flex-col gap-4">
-        <Input name="email" type="email" placeholder="E-mail" />
-        <Input name="password" type="password" placeholder="Password" />
+      <form onSubmit={formHandleSubmit}  className="mt-[60px] flex flex-col gap-4">
+        <Input {...register('email')} type="email" placeholder="E-mail" />
+        <Input {...register('password')} name="password" type="password" placeholder="Password" />
 
         <Button type="submit" >
           Entrar 

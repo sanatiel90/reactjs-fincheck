@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react'
+import { ComponentProps, forwardRef } from 'react'
 
 //usando ComponentProps vc pode criar uma interface que estende de um elemento HTML, e atribuindo as props dessa interface a um elemento, faz com q ele automaticamente
 //recebe todos os atributos do elemento HTML
@@ -6,12 +6,13 @@ interface InputProps extends ComponentProps<'input'> {
   name: string;
 }
 
-export function Input({ placeholder, id, name, ...props } : InputProps) {
+export const Input = forwardRef<HTMLInputElement, InputProps>(({ placeholder, id, name, ...props }, ref ) => {
   const inputId =  id ?? name;
   
   return (
     <div className='relative'>
       <input 
+        ref={ref}
         { ...props }
         id={inputId}
         className='w-full bg-white rounded-lg border border-gray-500 px-3 h-[52px] text-gray-800 pt-4 
@@ -27,4 +28,4 @@ export function Input({ placeholder, id, name, ...props } : InputProps) {
       </label>
     </div>
   )
-}
+})

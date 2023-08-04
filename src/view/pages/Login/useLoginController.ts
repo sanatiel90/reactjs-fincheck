@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-//import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "../../../app/services/api";
 
 
 //validacoes do zod
 const schema = z.object({
   email: z.string().nonempty('E-mail é obrigatório').email('Informe um e-mail válido'),
-  password: z.string().nonempty('Senha é obrigatória').min(8, 'Senha precisa ter pelo menos 8 caracteres'),
-  teste: z.string()
+  password: z.string().nonempty('Senha é obrigatória').min(8, 'Senha precisa ter pelo menos 8 caracteres')  
 })
 
 //criando um tipo com base no schema do zod
@@ -20,11 +20,12 @@ export function useLoginController() {
     handleSubmit: hookFormHandleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    //resolver: zodResolver(schema)
+    resolver: zodResolver(schema) //o resolver vai automaticamente validar os dados com base nas regras do schema fornecido; os eventuais erros vai ser retornados na prop formState
   })
 
-  const handleSubmit = hookFormHandleSubmit((data) => {    
-    console.log(data)
+  const handleSubmit = hookFormHandleSubmit(async (data) => {    
+    console.log('here we go')
+    await api.post('/auth/signin', data)
   })
 
   return { handleSubmit, register, errors }

@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "../../../app/services/api";
+import { useMutation } from "@tanstack/react-query";
+import { authService } from "../../../app/services/authService";
+import { SigninBody } from "../../../app/services/authService/signin";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../../../app/hooks/useAuth";
 
 
 //validacoes do zod
@@ -17,16 +21,33 @@ type FormData = z.infer<typeof schema>;
 export function useLoginController() {
   const { 
     register, 
-    handleSubmit: hookFormHandleSubmit,
+    handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema) //o resolver vai automaticamente validar os dados com base nas regras do schema fornecido; os eventuais erros vai ser retornados na prop formState
   })
 
-  const handleSubmit = hookFormHandleSubmit(async (data) => {    
-    console.log('here we go')
-    await api.post('/auth/signin', data)
-  })
+  /*usando lib React Query: useMutation() é usada quando vc vai modificar informacoes na API (usando POST,PUT,PATCH,DELETE); ela recebe alguns parametros, como "mutationFn",
+    que vai indicar a funcao a ser executada para fazer a requisicao à API; o useMutation() retorna algumas coisas, como um state "isLoading", que indica se a req. ainda esta
+    sendo feita ou nao, e uma funcao assincrona "mutateAsync", que vai ser usada para chamar o useMutation() onde, no seu codigo, vai ser feita a req. http */
+    const { mutateAsync, isLoading } = useMutation({
+      mutationFn: async (data: SigninBody) => {
+        return authService.signin(data); 
+      }
+    })
 
-  return { handleSubmit, register, errors }
+    //pegando funcao q faz o login
+    const { signin } = useAuth()
+  
+    const handleFormSubmit = handleSubmit(async (data) => {
+      try {
+        const { token } = await mutateAsync(data) //aqui faz a requisicao para a rota de login do backend
+        signin(token)  //aqui seta o estado que define o user como logado na aplicacao para true
+      } catch {
+        toast.error('Credenciais inválidas')
+      } 
+      
+    })
+
+  return { handleFormSubmit, register, errors, isLoading }
 }

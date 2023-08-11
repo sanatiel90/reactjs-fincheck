@@ -1,3 +1,4 @@
+//import { sleep } from "../../utils/sleep";
 import { api } from "../api";
 
 export interface SignupBody {
@@ -11,6 +12,7 @@ interface SignupResponse {
 }
 
 export async function signup(signupBody: SignupBody) {
+  //await sleep(1500)
   const { data } = await api.post<SignupResponse>('/auth/signup', signupBody)
   return data;
 }

@@ -4,6 +4,8 @@ import { z } from "zod";
 import { authService } from "../../../app/services/authService";
 import { useMutation } from "@tanstack/react-query";
 import { SignupBody } from "../../../app/services/authService/signup";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../../../app/hooks/useAuth";
 
 
 const schema = z.object({
@@ -32,11 +34,17 @@ export function useRegisterController(){
     }
   })
 
+  const { signin } = useAuth()
+
   const handleFormSubmit = handleSubmit(async (data) => {
-     const { token } = await mutateAsync(data)
-     console.log(token)
-     console.log({ isLoading })
+    try {
+      const { token } = await mutateAsync(data)
+      signin(token)
+    } catch {
+      toast.error('Ocorreu um erro ')
+    } 
+    
   })
 
-  return { handleFormSubmit, register, errors }
+  return { handleFormSubmit, register, errors, isLoading }
 }

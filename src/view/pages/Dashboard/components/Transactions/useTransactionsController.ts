@@ -3,5 +3,5 @@ import { useDashboard } from "../DashboardContext/useDashboard";
 export function useTransactionsController() {
   const { areValuesVisible } = useDashboard()
 
-  return { areValuesVisible, isLoading: true }
+  return { areValuesVisible, isInitialLoading: false, isLoading: false, transactions: [] }
 }

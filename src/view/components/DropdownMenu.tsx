@@ -9,9 +9,10 @@ function DropdownMenuRoot({ children }: { children: React.ReactNode }) {
   )
 }
 
+{ /* asChild: prop para evitar q button padrao do trigger seja criado em cima do children, pois la vai ter outro button */ }
 function DropdownMenuTrigger({ children }: { children: React.ReactNode }) {
   return (
-    <RadixDropdownMenu.Trigger className='outline-none'>
+    <RadixDropdownMenu.Trigger className='outline-none' asChild> 
       { children }
     </RadixDropdownMenu.Trigger>
   )
@@ -28,7 +29,9 @@ function DropdownMenuContent({ children, className }: DropdownMenuItemContent) {
       <RadixDropdownMenu.Content 
         side='bottom'
         className={cn(
-          'rounded-2xl p-2 bg-white space-y-2 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)] data-[side=bottom]:animate-slideUpAndFade z-50', 
+          'rounded-2xl p-2 bg-white space-y-2 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)] z-[90]',
+          'data-[side=bottom]:animate-slideUpAndFade',
+          'data-[side=top]:animate-slideDownAndFade', 
           className)}>
         { children }
       </RadixDropdownMenu.Content>
@@ -47,7 +50,7 @@ function DropdownMenuItem({ children, className, onSelect }: DropdownMenuItemPro
     <RadixDropdownMenu.Item 
       onSelect={onSelect}
       className={cn(
-        'min-h-[48px] outline-none flex items-center p-3 text-gray-800 text-sm data-[highlighted]:bg-gray-50 rounded-2xl transition-colors cursor-pointer',
+        'min-h-[40px] outline-none flex items-center py-2 px-4 text-gray-800 text-sm data-[highlighted]:bg-gray-50 rounded-2xl transition-colors cursor-pointer',
         className
     )} >
       { children }

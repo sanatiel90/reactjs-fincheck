@@ -3,6 +3,9 @@ import { Logo } from "../../components/Logo"
 import { Transactions } from "./components/Transactions"
 import { UserMenu } from "../../components/UserMenu"
 import { DashboardProvider } from "./components/DashboardContext"
+import { Fab } from "./components/Fab"
+import { NewAccountModal } from "./modals/NewAccountModal"
+import { NewTransactionModal } from "./modals/NewTransactionModal"
 
 export function Dashboard(){
   //const { signOut } = useAuth()
@@ -22,6 +25,11 @@ export function Dashboard(){
             <Transactions />
           </div>
         </main>
+
+        <Fab />
+
+        <NewAccountModal />
+        <NewTransactionModal />
       </div>
     </DashboardProvider>
 
